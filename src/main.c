@@ -22,6 +22,7 @@ static int Jimm = 0;
 
 
 void loadProgram(){
+	printf("Loading file.\n");
 	FILE *ptr;	// File pointer
 	ptr = fopen("/home/bugi/DTU/Digital/Computer Architecture/Final/shift.bin", "rb"); // Open File stream
 	if (ptr != NULL){
@@ -29,15 +30,17 @@ void loadProgram(){
 		fseek(ptr, 0L, SEEK_END);	// Find end of file
 		pc_max = ftell(ptr);		// Save size of file (maximum program counter)
 		rewind(ptr);				// Go to start of file
-		pc = (unsigned int*) malloc(pc_max);	// Allocate memory to
+		pc = (unsigned int*) malloc(pc_max);	// Allocate memory to program data
+		printf("Pointer at %#010x\n", pc);
 		for (int i = 0; i < pc_max; i++){		// Iterate through program, save to program array.
 			fread(&buffer, sizeof(int), 1, ptr); // Fetch instruction from file.
-			*pc = buffer;				/// Save instruction to array.
-			//printf("%#010x\n", *pc); 	// Print instruction in hexadecimal.
-			pc++;						// Increment program counter.
+			*(pc + i) = buffer;				/// Save instruction to array.
+			printf("%#010x\n", *(pc + i)); 	// Print instruction in hexadecimal.
+										// Increment program counter.
 		}
-		pc = pc - pc_max;			// Reset program counter.
+		//pc = pc - (pc_max*sizeof(unsigned int));			// Reset program counter.
 		fclose(ptr);
+		printf("Pointer at %#010x\n", pc);
 	}
 	else {
 		printf("Unable to open file.");
@@ -306,7 +309,7 @@ void SCRISCVProcessor() // Single cycle RISC-V Processor
 		// Fetch instruction
 		int instruction = *(pc + pc_offset);
 		// Decode
-		opcode = 0;
+		opcode = instruction & 0x7f;
 		rd = 0;
 		funct3 = 0;
 		funct7 = 0;
@@ -319,11 +322,11 @@ void SCRISCVProcessor() // Single cycle RISC-V Processor
 		Jimm = 0;
 
 		// Execute
+		printf("%d : ", pc_offset);
 		RISCVExecute();
 		// Memory access
 
 		// Write back
-		pc++;
 		pc_offset++;
 	}
 
