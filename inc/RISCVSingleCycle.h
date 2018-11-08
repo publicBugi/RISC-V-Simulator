@@ -1,0 +1,5 @@
+#ifndef _RISCVSINGLECYCLE_H_
+#define _RISCVSINGLECYCLE_H_
+
+
+#endif

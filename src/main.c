@@ -11,9 +11,11 @@ static int reg[32];
 static int opcode = 0;
 static int rd = 0;
 static int funct3 = 0;
+static int funct2 = 0;
 static int funct7 = 0;
 static int rs1 = 0;
 static int rs2 = 0;
+static int rs3 = 0;
 static int Iimm = 0;
 static int Simm = 0;
 static int Bimm = 0;
@@ -24,11 +26,12 @@ static int Jimm = 0;
 void loadProgram(){
 	printf("Loading file.\n");
 	FILE *ptr;	// File pointer
-	ptr = fopen("/home/bugi/DTU/Digital/Computer Architecture/Final/shift.bin", "rb"); // Open File stream
+	ptr = fopen("./../tests/task1/shift.bin", "rb"); // Open File stream
 	if (ptr != NULL){
 		unsigned int buffer;	// Temporary buffer
 		fseek(ptr, 0L, SEEK_END);	// Find end of file
 		pc_max = ftell(ptr);		// Save size of file (maximum program counter)
+		printf("File size = %d\n", pc_max);
 		rewind(ptr);				// Go to start of file
 		pc = (unsigned int*) malloc(pc_max);	// Allocate memory to program data
 		printf("Pointer at %#010x\n", pc);
@@ -47,7 +50,11 @@ void loadProgram(){
 	}
 }
 
+/*void loadResult(){
+	printf("Loading Result. \n");
+	File *ptr;
 
+}*/
 
 
 
@@ -187,7 +194,7 @@ void RISCVExecute(){
 					printf("Compare %d (%d) < %d (%d), register %d set to %d\n", rs1, reg[rs1], rs2, reg[rs2], rd, reg[rd]);
 					break;
 				case 0x3 : // Set < Unsigned
-					if (reg[rs1] < unsigned(reg[rs2])){
+					if (reg[rs1] < (unsigned)reg[rs2]){
 						reg[rd] = 1;
 					}
 					else {
@@ -202,7 +209,7 @@ void RISCVExecute(){
 				case 0x5 : // Shift right and Right Arithm
 					switch(Iimm){
 						case 0x0 :
-							reg[rd] = reg[rs1] >> reg[rs2];
+							reg[rd] = (unsigned)reg[rs1] >> reg[rs2];
 							printf("Shifted register %d right by %d from %d to %d\n", rd, rs2, rs1, reg[rd]);
 							break;
 						case 0x1 :
@@ -310,16 +317,18 @@ void SCRISCVProcessor() // Single cycle RISC-V Processor
 		int instruction = *(pc + pc_offset);
 		// Decode
 		opcode = instruction & 0x7f;
-		rd = 0;
-		funct3 = 0;
-		funct7 = 0;
-		rs1 = 0;
-		rs2 = 0;
-		Iimm = 0;
-		Simm = 0;
-		Bimm = 0;
-		Uimm = 0;
-		Jimm = 0;
+		rd = (instruction >> 7) & 0x01f;
+		funct3 = (instruction >> 12) & 0x7;
+		funct7 = instruction >> 25;
+		funct2 = (instruction >> 25) & 0x2;
+		rs1 = (instruction >> 12) & 0x1f;
+		rs2 = (instruction >> 20) & 0x1f;
+		rs3 = (instruction >> 27);
+		Iimm = instruction >> 20;
+		Simm = (instruction >> 25) | ((instruction >> 7) & 0x1F);
+		Bimm = ((instruction >> 31) << 12)| (((instruction >> 7) & 0x1) << 11) | (((instruction >> 25) & 0x3F) << 5) | (((instruction >> 8) & 0xF) << 1);
+		Uimm = (instruction >> 12);
+		Jimm = ((instruction >> 31) << 20) | (((instruction >> (12)) & 0x1FF ) << 1)| (instruction >> 11)|(((instruction >> 11) & 0x7F) << 12) ;
 
 		// Execute
 		printf("%d : ", pc_offset);
@@ -338,25 +347,3 @@ int main(void) {
 	SCRISCVProcessor();
 	
 }
-/*void RISCVProcessor(){
-	printf("Hello RISC-V World!\n");
-	pc = 0;
-
-		int instr = *pcptr + pc;
-		int opcode = instr & 0x7f;
-		int rd = (instr >> 7) & 0x01f;
-		int funct3 = (instr >> 12) & 0x7;
-		int rs1 = (instr >> 15) & 0x01f;
-		int rs2 = (instr >> 20) & 0x01f;
-		int Iimm = (instr >> 20); 	// I Type Immediate
-		int Bimm = (instr >> 25); 	// B Type Immediate
-		int simm = (instr >> 25) + ((instr >> 7) & 0x01f);	// S Type Immediate
-		int rd = Iimm & 0x4;
-		int alt = Iimm >> 10;
-
-		
-		++pc;
-	}
-
-	printf("Program exit\n");
-}*/
