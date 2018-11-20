@@ -1,27 +1,32 @@
 #include "IO.h"
 
-int loadArray(int **array, char file[]){
-	printf("Loading file.\n");
-	FILE *ptr;	// File pointer
-	ptr = fopen(file, "rb"); // Open File stream
+long loadArray(int **array, char file[]){ // ARRAY INDIRECTION
+	FILE *ptr;
+	long file_size;
+
+	// Open File
+	ptr = fopen(file, "rb");
+
+	// If file exists
 	if (ptr != NULL){
-		unsigned int buffer;					// Temporary buffer
-		int pc_max;
-		fseek(ptr, 0L, SEEK_END);				// Find end of file
-		pc_max = ftell(ptr);					// Save size of file (maximum program counter)
-		printf("File size = %d\n", pc_max);
-		rewind(ptr);							// Go to start of file
-		*array = (int*) malloc(pc_max*sizeof(int));			// Allocate memory to program data
-		for (int i = 0; i < pc_max; i++){		// Iterate through program, save to program array.
-			fread(&buffer, sizeof(int), 1, ptr); 	// Fetch instruction from file.
-			*(*(array) + i) = buffer;					 	// Save instruction to array.
-			//printf("%#010x\n", *(*(array) + i)); 		// Debugging tool
-		}
+		// Find size of file and store value in bytes
+		fseek(ptr, 0, SEEK_END);
+		file_size = ftell(ptr);
+		rewind(ptr);
+
+		// Allocate array; Filesize in bytes / Int size (4) = Elements
+		*array = (int*) calloc(file_size/sizeof(int), file_size);
+
+		// Read file to array; 4 Bytes per element; Filesize/4 elements.
+		fread(*array, sizeof(int), file_size/sizeof(int), ptr);
 		fclose(ptr);
-		return(pc_max);
+
+		// Return file size in int elements.
+		return file_size / sizeof(int);
 	}
 	else {
-		printf("Unable to open file.\n");
+		// Opening file failed; Exit.
 		exit(1);
 	}
+
 }

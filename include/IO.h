@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 // Load 
-int loadArray(int **array, char string[]);
+long loadArray(int **array, char string[]);
 
 // LOAD FILE
 

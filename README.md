@@ -13,12 +13,12 @@ COMPLETE TASK 3									: Complete
 COMPLETE INSTRUCTION TESTS						: Complete
 
 PRIORITY: Curses based Debugger					: Priority
-	WINDOW1: Machine code 						: Pending
-	WINDOW2: Assembly code 						: Pending
-	WINDOW3: Console (ECALL Functions) 			: Pending
-	WINDOW4: Registers 							: Pending
-	WINDOW5: Memory 							: Pending
-	Function1: Step by step view				: Pending
+	WINDOW1: Machine code 						: Complete
+	WINDOW2: Assembly code 						: Complete (Minor bugs)
+	WINDOW3: Console (ECALL Functions) 			: EXIT Implemented
+	WINDOW4: Registers 							: Complete
+	WINDOW5: Memory 							: Complete
+	Function1: Step by step view				: Complete
 	Function2: Select Machine/Assembly line 
 			   and autostep to breakpoint 		: Pending
 	Function3: More navigation features (QOL)	: Pending

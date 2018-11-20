@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 struct instr{
 	unsigned int opcode:7;
 	unsigned int rd:5;
@@ -18,14 +16,21 @@ struct instr{
 	signed int Simm;
 	signed int Bimm;
 	signed int Uimm;
-	signed int Jimm;	
+	signed int Jimm;
+};
+
+struct ctrlSignals{ // These are not actual control signals as described in RISC-V book.
+	int Halt:1;
+	int Branch:1; 	// Set if branch
+	int ECALL:1;	// Set if ECALL
+	int EBREAK:1;	// Set if EBREAK
 };
 
 struct instr InstructionDecode(int MachineInstr);
 
-void SingleCycleStep(int reg[], char *mem, struct instr instruction, int *pc);
+struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instruction, int *pc);
 
-void VerboseInstruction(int reg[], char *mem, struct instr instruction, int *pc);
+void VerboseInstruction(char **output_str, struct instr instruction, int pc);
 
 void RISCVExecute(void);
 
