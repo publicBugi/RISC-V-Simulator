@@ -1,0 +1,725 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ou",
+				"outputFile"
+			],
+			[
+				"prog",
+				"progFlags"
+			],
+			[
+				"pro",
+				"progFlags"
+			],
+			[
+				"Prog",
+				"progFlags"
+			],
+			[
+				"CH_",
+				"CH_Size"
+			],
+			[
+				"W_",
+				"W_Console"
+			],
+			[
+				"Con",
+				"console_Point"
+			],
+			[
+				"D",
+				"Debug"
+			],
+			[
+				"fun",
+				"funct7"
+			],
+			[
+				"fu",
+				"funct3"
+			],
+			[
+				"func",
+				"funct2"
+			],
+			[
+				"I",
+				"Iimm"
+			],
+			[
+				"instr",
+				"instruction"
+			],
+			[
+				"tes",
+				"Testmode"
+			],
+			[
+				"res",
+				"resultFile"
+			],
+			[
+				"progr",
+				"progrFlags"
+			],
+			[
+				"szie",
+				"sizeof"
+			],
+			[
+				"size",
+				"sizeof"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/main.c",
+			"settings":
+			{
+				"buffer_size": 10503,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "testall.sh",
+			"settings":
+			{
+				"buffer_size": 84,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/bugi/DTU/Programming/C-StackExchange Question/src/main.c",
+			"settings":
+			{
+				"buffer_size": 661,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "addlarge.res",
+			"settings":
+			{
+				"buffer_size": 320,
+				"encoding": "Hexadecimal",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 1813,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Makefile/Make.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++/C++ Single File.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/User/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/User/Make.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"git:push",
+				"git: push"
+			],
+			[
+				"git:quick",
+				"git: quick stage"
+			],
+			[
+				"git: quick\t",
+				"git: quick stage"
+			],
+			[
+				"git:PU",
+				"git: push"
+			],
+			[
+				"git:com",
+				"git: commit"
+			],
+			[
+				"git: qu",
+				"git: quick stage"
+			],
+			[
+				"make",
+				"Build With: Make - Clean"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			],
+			[
+				"git:comm\t",
+				"git: commit"
+			],
+			[
+				"gitp",
+				"git: pull"
+			],
+			[
+				"git:fet",
+				"git: fetch"
+			],
+			[
+				"git:stage",
+				"git: quick stage"
+			],
+			[
+				"git push",
+				"git: push"
+			],
+			[
+				"git stage",
+				"git: quick stage"
+			],
+			[
+				"git: commit",
+				"git: commit"
+			],
+			[
+				"git comm\t",
+				"git: commit"
+			],
+			[
+				"commit",
+				"git: commit"
+			],
+			[
+				"git ",
+				"git: quick commit"
+			],
+			[
+				"git comm",
+				"git: commit"
+			],
+			[
+				"git fetch",
+				"git: fetch"
+			],
+			[
+				"git set remote",
+				"github: set remote for integration"
+			],
+			[
+				"git: stage",
+				"git: quick stage"
+			],
+			[
+				"remote ",
+				"git: remote add"
+			],
+			[
+				"remote",
+				"git: remote remove"
+			],
+			[
+				"git remote",
+				"git: remote add"
+			],
+			[
+				"git repo",
+				"github: open repo"
+			],
+			[
+				"git",
+				"git: init"
+			],
+			[
+				"github: ",
+				"github: set remote for integration"
+			],
+			[
+				"Git:In",
+				"git: init"
+			],
+			[
+				"Git Remove",
+				"Package Control: Remove Repository"
+			],
+			[
+				"Remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"git: ",
+				"Git: Track Remote Branch"
+			],
+			[
+				"git: Gui",
+				"Git: Gui"
+			],
+			[
+				"git: Remo",
+				"Git: Track Remote Branch"
+			],
+			[
+				"git S",
+				"Git: Status"
+			],
+			[
+				"git:c",
+				"Git: Commit"
+			],
+			[
+				"git:",
+				"Git: Add All"
+			],
+			[
+				"git: Comm",
+				"Git: Commit"
+			],
+			[
+				"gcc",
+				"Package Control: Install Package"
+			],
+			[
+				"Set Syntax C",
+				"Set Syntax: C Improved"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/include"
+	],
+	"file_history":
+	[
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/makefile",
+		"/home/bugi/DTU/Programming/C-StackExchange Question/makefile",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/addlarge.res",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/addlarge.res",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/src/IO.c",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/include/interface.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/src/interface.c",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/include/IO.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/include/RISCVProcessor.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/src/RISCVProcessor.c",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/README.md",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task3/loop.s",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/addlarge.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/addneg.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/addpos.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/shift.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task2/branchmany.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/RISCVSIM",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/testall.sh",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/InstructionTests/test_bne.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/InstructionTests/test_sb.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task3/loop.bin",
+		"/home/bugi/.config/sublime-text-3/Packages/User/Make.sublime-build",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/inc/interface.h",
+		"/home/bugi/.config/sublime-text-3/Packages/User/CBuild1.sublime-build",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/inc/IO.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/inc/RISCVProcessor.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task2/branchcnt.bin",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/shift.s",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/src/RISCVSingleCycle.c",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/inc/RISCVSingleCycle.h",
+		"/home/bugi/DTU/Programming/CAE - RISC V Simulator/tests/task1/shift.res"
+	],
+	"find":
+	{
+		"height": 37.8863409771
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"*output_str",
+			"output_str",
+			"*output_str",
+			"output_str",
+			"40,\"",
+			"%#04x, %#010x",
+			"%#04x, %#010x, %#010x",
+			"%#04x, %#010x",
+			" %#04x, %#010x,",
+			"%#04x, %#010x,",
+			"printf(\"",
+			"printf(",
+			"Pending",
+			"11",
+			" %",
+			"instruction",
+			"shamt",
+			"imm",
+			"bimm",
+			"\");",
+			")\",",
+			"d\",",
+			"\","
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"output_str",
+			"*output_str",
+			"output_str",
+			"*output_str",
+			"50,\"",
+			"%#06x, %#06x",
+			"%#06x, %#06x, %#06x",
+			"%#06x, %#06x",
+			" %#06x, %#06x,",
+			"snprintf(output_str, 40,\"",
+			"MachineInstr",
+			"rd",
+			"Iimm",
+			"Bimm",
+			"\\n\");",
+			")\\n\",",
+			"d\\n\",",
+			"\\n\","
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/main.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10503,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								191,
+								191
+							]
+						],
+						"settings":
+						{
+							"git_savvy.repo_path": "/home/bugi/DTU/Programming/CAE - RISC V Simulator",
+							"syntax": "Packages/C Improved/C Improved.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 419.740777667,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "testall.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 84,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"git_savvy.repo_path": "/home/bugi/DTU/Programming/CAE - RISC V Simulator",
+							"syntax": "Packages/ShellScript/Bash.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/bugi/DTU/Programming/C-StackExchange Question/src/main.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 661,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								183,
+								183
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "addlarge.res",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 320,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"git_savvy.repo_path": "/home/bugi/DTU/Programming/CAE - RISC V Simulator",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1813,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1325,
+								1325
+							]
+						],
+						"settings":
+						{
+							"git_savvy.repo_path": "/home/bugi/DTU/Programming/CAE - RISC V Simulator",
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 898.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 37.8863409771
+	},
+	"input":
+	{
+		"height": 54.850448654
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.GitSavvy":
+	{
+		"height": 109.685943604
+	},
+	"output.exec":
+	{
+		"height": 351.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 109.685943604
+	},
+	"pinned_build_system": "Packages/User/Make.sublime-build",
+	"project": "RISCV.sublime-project",
+	"replace":
+	{
+		"height": 94.7308075773
+	},
+	"save_all_on_build": false,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 501.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 381.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 233.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

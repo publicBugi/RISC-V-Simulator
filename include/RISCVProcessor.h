@@ -30,7 +30,7 @@ struct instr InstructionDecode(int MachineInstr);
 
 struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instruction, int *pc);
 
-void VerboseInstruction(char **output_str, struct instr instruction, int pc);
+char *VerboseInstruction(struct instr instruction, int pc);
 
 void RISCVExecute(void);
 
