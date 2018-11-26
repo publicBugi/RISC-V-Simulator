@@ -24,7 +24,7 @@ PRIORITY: Curses based Debugger					: Priority
 	Function3: More navigation features (QOL)	: Pending
 Add MUL, DIV and RISC-V Extension functions. 	: Pending
 Add more ECALL Functions(?)						: Not priority
-Tidy code / Helper functions 				   	: Pending
+Tidy code / Helper functions 				   	: Partially
 
 
 PRIORITY: SAVE RESULT TO BINARY					: COMPLETE
@@ -34,6 +34,7 @@ Autostep & Navigation SATURDAY
 Clean code and fix bugs SUNDAY (CLI and CURSES Commands have to be clean)
 If I have time I'd like to implement the important extensions to the processor.
 
+NOTE: Specify Endianness (RISC-V is little Endian / Option to support viewing it in Big endian?)
 
 
 

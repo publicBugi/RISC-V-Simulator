@@ -2,8 +2,8 @@
 
 void wprintRegisters(int *reg, WINDOW *Window){
 	for (int i = 0; i < 16; i++){
-		mvwprintw(Window, i+1 , 3 ,"%#03x : %#010x", i, reg[i]);
-		mvwprintw(Window, i+1 , 22 ,"%#03x : %#010x", i+16, reg[i+16]);
+		mvwprintw(Window, i+1 , 3 ,"x%02d : %#010x", i, reg[i]);
+		mvwprintw(Window, i+1 , 22 ,"x%02d : %#010x", i+16, reg[i+16]);
 	}
 }
 
@@ -62,10 +62,10 @@ void wprintAssembly(char** assemblyCode, WINDOW *W_Assembly, int pc, int pc_max)
 
 void printRegister(int *ptr){
 	for (int i = 0; i < 8; i++){
-		printf("%#03x : %#010x", i, *(ptr + i));
-		printf(" %#03x : %#010x", i+8, *(ptr + i+8));
-		printf(" %#03x: %#010x", i+16, *(ptr + i+16));
-		printf(" %#03x : %#010x\n", i+24, *(ptr + i+24));		
+		printf("x%02d : %#010x", i, *(ptr + i));
+		printf(" x%02d : %#010x", i+8, *(ptr + i+8));
+		printf(" x%02d: %#010x", i+16, *(ptr + i+16));
+		printf(" x%02d : %#010x\n", i+24, *(ptr + i+24));		
 	}
 }
 

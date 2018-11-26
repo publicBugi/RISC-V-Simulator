@@ -7,10 +7,10 @@
 #include "RISCVProcessor.h"
 
 struct flags{
-	int Debug:1;
-	int Verbose:1;
-	int Testmode:1;
-	int Output:1;
+	int Debug:1;	// Enable Curses Debugging
+	int Verbose:1;	// Enable Verbose console
+	int Testmode:1; // Enable testing of registers
+	int Output:1;	// Save registers to file
 	int outputFile; // Argc to output file path
 	int resultFile; // Argc to result file path
 };
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 	int pc = 0;										// Program counter starts at zero.
 	int reg[32] = {0};								// Allocate registers (Zero initialized)
 	reg[2] = 0x7ffffff0; 							// Stack pointer
-	reg[3] = 0x10000000; 							// Data
+	reg[3] = 0x10000000; 							// Data pointer
 	char *mem = malloc(reg[2]);						// Allocate CPU memory on heap
 	struct instr instruction;						// Decoded Instruction struct (Declared in RISCVProcessor.h)
 	struct ctrlSignals Control = {	Halt:0, 		// Processor control signals (Declared in RISCVProcessor.h)
@@ -129,9 +129,9 @@ int main(int argc, char** argv) {
 			AssemblyCode[i] = VerboseInstruction(InstructionDecode(*(progr + i)), i*4);
 			
 			// Debugging functions (There's a bug here! First element turns to noise)
-			mvwprintw(W_AssemblyCode, 1+i, 2, *(AssemblyCode+i));
-			wrefresh(W_AssemblyCode);
-			getch();
+			//mvwprintw(W_AssemblyCode, 1+i, 2, *(AssemblyCode+i));
+			//wrefresh(W_AssemblyCode);
+			//getch();
 		}
 		
 		// Allocate char array for Console. (Should redo this; Not good code)
@@ -143,25 +143,30 @@ int main(int argc, char** argv) {
 			*(ConsoleHistory+CH_Point) = malloc(5); // Won't function without this (Fix this!)
 			//snprintf(*ConsoleHistory, 5, "Test");
 		}
+		char user_Input = 0;
 
-		// Update all windows with their respective registers!
-		wprintRegisters(reg, W_Registers);
-		wprintMemory(mem, W_Memory, User_MemPoint);
-		wprintMachine(progr, W_MachineCode, pc/4, pc_max/4);
-		wprintAssembly(AssemblyCode, W_AssemblyCode, pc/4, pc_max/4);
-		
-		// Refresh all windows (Won't display new information without update call)
-		wrefresh(W_MachineCode);
-		wrefresh(W_AssemblyCode);
-		wrefresh(W_Registers);
-		wrefresh(W_Memory);
-		wrefresh(W_Console);
+		while(user_Input != 's'){
+			user_Input = 0;
+			// Update all windows with their respective registers!
+			wprintRegisters(reg, W_Registers);
+			wprintMemory(mem, W_Memory, User_MemPoint);
+			wprintMachine(progr, W_MachineCode, pc/4, pc_max/4);
+			wprintAssembly(AssemblyCode, W_AssemblyCode, pc/4, pc_max/4);
 
-		// Halt until user input
-		getch();
+			// Refresh all windows (Won't display new information without update call)
+			wrefresh(W_MachineCode);
+			wrefresh(W_AssemblyCode);
+			wrefresh(W_Registers);
+			wrefresh(W_Memory);
+			wrefresh(W_Console);
+
+			// Halt until user input
+			user_Input = getch();
+		}
 
 		// RISC-V Processor loop & CURSES Debugger functions
 		while(pc < pc_max && !(pc < 0) && !(Control.Halt)){
+			user_Input = 0;
 			// Processor loop will exit if:
 				// PC counter exceeds PC_MAX (Program size)
 				// PC goes below zero (Indicates branch / JUMP error!)
@@ -233,32 +238,39 @@ int main(int argc, char** argv) {
 			// Auto focus memory to Stack pointer (Expand to allow user to control this)
 			User_MemPoint = reg[2] + 80;
 			
-			// Write registers to windows
-			wprintRegisters(reg, W_Registers);
-			wprintMemory(mem, W_Memory, User_MemPoint);
-			wprintMachine(progr, W_MachineCode, pc/4, pc_max/4);
-			wprintAssembly(AssemblyCode, W_AssemblyCode, pc/4, pc_max/4);
-			//wprintConsole(ConsoleHistory, W_Console, pc/4);
-			for (int i = 0; i < CH_Size; i++){
-				mvwprintw(W_Console, 1 + i, 1, *ConsoleHistory);
+			while(user_Input != 's'){
+				
+				// Write registers to windows
+				wprintRegisters(reg, W_Registers);
+				wprintMemory(mem, W_Memory, User_MemPoint);
+				wprintMachine(progr, W_MachineCode, pc/4, pc_max/4);
+				wprintAssembly(AssemblyCode, W_AssemblyCode, pc/4, pc_max/4);
+				//wprintConsole(ConsoleHistory, W_Console, pc/4);
+				for (int i = 0; i < CH_Size; i++){
+					mvwprintw(W_Console, 1 + i, 1, *ConsoleHistory);
+				}
+
+				// Refresh all windows
+				wrefresh(W_MachineCode);
+				wrefresh(W_AssemblyCode);
+				wrefresh(W_Registers);
+				wrefresh(W_Memory);
+				wrefresh(W_Console);
+				
+				// Halt next step until user input (Expand for autostepping)
+				user_Input = 0;
+				user_Input = getch();
+
 			}
 
-			// Refresh all windows
-			wrefresh(W_MachineCode);
-			wrefresh(W_AssemblyCode);
-			wrefresh(W_Registers);
-			wrefresh(W_Memory);
-			wrefresh(W_Console);
 			
-			// Halt next step until user input (Expand for autostepping)
-			getch();
 		}
 
 		// Halt exit until user input
 		getch();
 		endwin(); // End Curses
 		free(AssemblyCode); // Free Allocated AssemblyCode
-		
+		// CURSES Debugger exit
 	}
 	else { 	// EXECUTE COMMAND LINE
 		while(pc < pc_max && !(pc < 0) && !(Control.Halt)){
@@ -331,9 +343,11 @@ int main(int argc, char** argv) {
 	}
 
 	// Print results!
-	if(progFlags.Verbose){ 
+	if(progFlags.Verbose){
+		printf("\nProcessor Register\n"); 
 		printRegister(reg); // Print processor results
 		if (progFlags.Testmode){
+			printf("\nResult Register\n");
 			printRegister(resArray); // Print .res file
 		}
 	}

@@ -45,6 +45,7 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 	Control.ECALL = 0;
 	Control.EBREAK = 0;
 	Control.Halt = 0;
+
 	switch(instruction.opcode){	
 		//// RV32I
 		// Loads
@@ -144,62 +145,132 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 					break;
 			}
 			break;
+		// 
 		case 0x33 :
-			switch(instruction.funct3){
+			switch(instruction.funct7 & 0x1){
 				case 0x0 :
-					switch(instruction.funct7){
-						case 0x0 : // ADD
-							reg[instruction.rd] = reg[instruction.rs1] + reg[instruction.rs2];
+				switch(instruction.funct3){
+					case 0x0 :
+						switch(instruction.funct7){
+							case 0x0 : // ADD
+								reg[instruction.rd] = reg[instruction.rs1] + reg[instruction.rs2];
+								break;
+							case 0x20 : // SUB
+								reg[instruction.rd] = reg[instruction.rs1] - reg[instruction.rs2]; // ??
+								break;
+							default :
+								break;
+							}
 							break;
-						case 0x20 : // SUB
-							reg[instruction.rd] = reg[instruction.rs1] - reg[instruction.rs2]; // ??
-							break;
-						default :
-							break;
+					case 0x1 : // SHift left
+						reg[instruction.rd] = reg[instruction.rs1] << reg[instruction.rs2];
+						break;
+					case 0x2 : // Set <
+						if (reg[instruction.rs1] < reg[instruction.rs2]){
+							reg[instruction.rd] = 1;
+						}
+						else {
+							reg[instruction.rd] = 0;
 						}
 						break;
-				case 0x1 : // SHift left
-					reg[instruction.rd] = reg[instruction.rs1] << reg[instruction.rs2];
-					break;
-				case 0x2 : // Set <
-					if (reg[instruction.rs1] < reg[instruction.rs2]){
-						reg[instruction.rd] = 1;
-					}
-					else {
-						reg[instruction.rd] = 0;
-					}
-					break;
-				case 0x3 : // Set < Unsigned
-					if (reg[instruction.rs1] < (unsigned)reg[instruction.rs2]){
-						reg[instruction.rd] = 1;
-					}
-					else {
-						reg[instruction.rd] = 0;
-					}
-					break;
-				case 0x4 : // XOR
-					reg[instruction.rd] = reg[instruction.rs1] ^ reg[instruction.rs2];
-					break;
-				case 0x5 : // Shift right and Right Arithm
-					switch(instruction.funct7){
-						case 0x0 :
-							reg[instruction.rd] = (unsigned)reg[instruction.rs1] >> reg[instruction.rs2];
+					case 0x3 : // Set < Unsigned
+						if (reg[instruction.rs1] < (unsigned)reg[instruction.rs2]){
+							reg[instruction.rd] = 1;
+						}
+						else {
+							reg[instruction.rd] = 0;
+						}
 						break;
-						case 0x20 :
-							reg[instruction.rd] = reg[instruction.rs1] >> reg[instruction.rs2]; //WRONG
+					case 0x4 : // XOR
+						reg[instruction.rd] = reg[instruction.rs1] ^ reg[instruction.rs2];
+						break;
+					case 0x5 : // Shift right and Right Arithm
+						switch(instruction.funct7){
+							case 0x0 :
+								reg[instruction.rd] = (unsigned)reg[instruction.rs1] >> reg[instruction.rs2];
 							break;
-						default :
+							case 0x20 :
+								reg[instruction.rd] = reg[instruction.rs1] >> reg[instruction.rs2]; //WRONG
+								break;
+							default :
+								break;
+						}
+						break;
+					case 0x6 : // OR
+						reg[instruction.rd] = reg[instruction.rs1] | reg[instruction.rs2];
+						break;
+					case 0x7 : // AND
+						reg[instruction.rd] = reg[instruction.rs1] & reg[instruction.rs2];
+					break;
+
+					default :
+						break;
+				}
+				break;
+
+				//// RISC-V EXTENSION M (MULTIPLICATION AND DIVISION)
+				case 0x1 :
+					switch(instruction.funct3){
+						case 0 : // MUL
+							reg[instruction.rd] = (int32_t)(((int64_t)reg[instruction.rs1] * (int64_t)reg[instruction.rs2]) & 0xffffffff);
+							break;
+
+						case 1 : // MULH
+							reg[instruction.rd] = (int32_t)(((int64_t)reg[instruction.rs1] * (int64_t)reg[instruction.rs2]) >> 32);
+							break;
+
+						case 2 : // MULHSU
+							reg[instruction.rd] = ((int64_t)reg[instruction.rs1]) * ((uint64_t)reg[instruction.rs2] & 0xffffffff) >> 32; // Remove sign extension on unsigned values
+							break;
+
+						case 3 : // MULHU
+							reg[instruction.rd] = ((uint64_t)reg[instruction.rs1] & 0xffffffff) * ((uint64_t)reg[instruction.rs2] & 0xffffffff) >> 32  ;
+							break;
+
+						case 4 : // DIV
+							if (reg[instruction.rs2] == 0){ // Division by zero
+								reg[instruction.rd] = -1; // Set all bits
+							}
+							else if (reg[instruction.rs1] == -2147483648 && reg[instruction.rs2] == -1){
+								reg[instruction.rd] = -2147483648;	// (2^(32-1))
+							}
+							else{
+								reg[instruction.rd] = reg[instruction.rs1] / reg[instruction.rs2];
+							}
+							break;
+
+						case 5 : // DIVU
+							if (reg[instruction.rs2] == 0){ // Division by zero
+								reg[instruction.rd] = 4294967296 - 1; // Set all bits ((2^32) - 1)
+								// TESTCASE wants result to be 0x0A Not all bits set ?? Manual says otherwise.
+							}
+							else{
+								reg[instruction.rd] = (unsigned)reg[instruction.rs1] / (unsigned)reg[instruction.rs2];
+							}
+							break;
+
+						case 6 : // REM
+							if (reg[instruction.rs2] == 0){ // Division by zero
+								reg[instruction.rd] = reg[instruction.rs1];
+							}
+							else if ((reg[instruction.rs1] == -2147483648) && (reg[instruction.rs2] == -1)){
+								reg[instruction.rd] = 0;
+							}
+							else {
+								reg[instruction.rd] = reg[instruction.rs1] % reg[instruction.rs2];
+							}
+							break;
+
+						case 7 : // REMU
+							if (reg[instruction.rs2] == 0){ // Division by zero
+								reg[instruction.rd] = reg[instruction.rs1];
+							}
+							else{
+								reg[instruction.rd] = (unsigned)reg[instruction.rs1] % (unsigned)reg[instruction.rs2];
+							}
 							break;
 					}
-					break;
-				case 0x6 : // OR
-					reg[instruction.rd] = reg[instruction.rs1] | reg[instruction.rs2];
-					break;
-				case 0x7 : // AND
-					reg[instruction.rd] = reg[instruction.rs1] & reg[instruction.rs2];
 				break;
-				default :
-					break;
 			}
 			break;
 		case 0x63 : // Branch
@@ -272,6 +343,7 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 		case 0x17 : // AUIPC
 			reg[instruction.rd] = *pc + instruction.Uimm;
 			break;
+
 		default : // Unknown
 			break;
 	}
@@ -287,20 +359,20 @@ char* VerboseInstruction(struct instr instruction, int pc){
 		case 0x3 :
 			switch(instruction.funct3){
 				case 0x0 :// Load Byte
-					snprintf(output_str, 50, "%#04x : LB %#06x, %#06x, %#010x", pc ,instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50, "%#04x : LB x%d %d(x%d)", pc ,instruction.rd, instruction.Iimm, instruction.rs1);
 					//printf("LB %#04x, %#010x, %#010x\n", instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x1 :// Load Halfword
-					snprintf(output_str, 50,"%#04x : LH %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : LH x%d %d(x%d)", pc, instruction.rd, instruction.Iimm, instruction.rs1);
 					break;
 				case 0x2 :// Load Word
-					snprintf(output_str, 50,"%#04x : LW %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : LW x%d %d(x%d)", pc, instruction.rd, instruction.Iimm, instruction.rs1);
 					break;
 				case 0x4 : // Load Byte Unsigned
-					snprintf(output_str, 50,"%#04x : LBU %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : LBU x%d %u(x%d)", pc, instruction.rd, instruction.Iimm, instruction.rs1);
 					break;
 				case 0x5 :// Load Half Unsigned
-					snprintf(output_str, 50,"%#04x : LHU %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : LHU x%d %u(x%d)", pc, instruction.rd, instruction.Iimm, instruction.rs1);
 					break;
 				default :
 					snprintf(output_str, 50,"%#04x : Invalid load function", pc);
@@ -311,16 +383,16 @@ char* VerboseInstruction(struct instr instruction, int pc){
 		case 0x23 :
 			switch(instruction.funct3){
 				case 0x0 : // Store Byte
-					snprintf(output_str, 50,"%#04x : SB %#06x, %#06x, %#010x",pc, instruction.rs1, instruction.rs2, instruction.Simm);
+					snprintf(output_str, 50,"%#04x : SB x%d %d(x%d)",pc, instruction.rs1, instruction.Simm, instruction.rs2);
 					break;
 				case 0x1 : // Store Halfword
-					snprintf(output_str, 50,"%#04x : SH %#06x, %#06x, %#010x",pc, instruction.rs1, instruction.rs2, instruction.Simm);
+					snprintf(output_str, 50,"%#04x : SH x%d %d(x%d)",pc, instruction.rs1, instruction.Simm, instruction.rs2);
 					break;
 				case 0x2 : // Store Word
-					snprintf(output_str, 50,"%#04x : SW %#06x, %#06x, %#010x",pc, instruction.rs1, instruction.rs2, instruction.Simm);
+					snprintf(output_str, 50,"%#04x : SW x%d %d(x%d)",pc, instruction.rs1, instruction.Simm, instruction.rs2);
 					break;
 				default :
-					snprintf(output_str, 50,"%#04x : Invalid store function!" , pc);
+					snprintf(output_str, 50,"%#04x : Invalid store function" , pc);
 					break;
 				}
 			break;
@@ -328,33 +400,33 @@ char* VerboseInstruction(struct instr instruction, int pc){
 		case 0x13 :
 			switch(instruction.funct3){
 				case 0x0 : // Add Immediate
-					snprintf(output_str, 50,"%#04x : ADDI %#06x , %#06x , %#010x",pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : ADDI x%d x%d %d",pc, instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x2 : // Śet < Immediate
-					snprintf(output_str, 50,"%#04x : SLTI %#06x, %#06x, %#010x",pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : SLTI x%d x%d %d",pc, instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x3 : // Set < Immediate unsigned
-					snprintf(output_str, 50,"%#04x : SLTIU %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, (unsigned)instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : SLTIU x%d x%d %u", pc, instruction.rd, instruction.rs1, (unsigned)instruction.Iimm);
 					break;
 				case 0x4 : // XOR Immediate
-					snprintf(output_str, 50,"%#04x : XORI %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : XORI x%d x%d %d", pc, instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x6 : // OR Immediate
-					snprintf(output_str, 50,"%#04x : ORI %#06x, %#06x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : ORI x%d x%d %d", pc, instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x7 : // AND Immediate
-					snprintf(output_str, 50,"%#04x : ANDI %#06x, %#06x, %#010x",pc, instruction.rd, instruction.rs1, instruction.Iimm);
+					snprintf(output_str, 50,"%#04x : ANDI x%d x%d %d",pc, instruction.rd, instruction.rs1, instruction.Iimm);
 					break;
 				case 0x1 : // Shift left Immediate
-					snprintf(output_str, 50,"%#04x : SLLI %02d, %#010x, %#010x",pc, instruction.rd, instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : SLLI x%d x%d %d",pc, instruction.rd, instruction.rs1, instruction.rs2);
 					break;
 				case 0x5 : // Shift right immediate & Aritm
 					switch(instruction.funct7){
 						case 0x0 :
-							snprintf(output_str, 50,"%#04x : SRLI %02d, %#010x, %#010x", pc, instruction.rd, instruction.rs1, instruction.rs2);
+							snprintf(output_str, 50,"%#04x : SRLI x%d x%d %d", pc, instruction.rd, instruction.rs1, instruction.rs2);
 							break;
 						case 0x20 :
-							snprintf(output_str, 50,"%#04x : SRAI %02d, %#010x , %#010x",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							snprintf(output_str, 50,"%#04x : SRAI x%d x%d %d",pc, instruction.rd, instruction.rs1, instruction.rs2);
 							break;
 						default :
 							snprintf(output_str, 50,"%#04x : Shift not valid",pc);
@@ -362,80 +434,116 @@ char* VerboseInstruction(struct instr instruction, int pc){
 					}
 					break;
 				default :
-					snprintf(output_str, 50,"%#04x : Funct3 not implemented!",pc);
+					snprintf(output_str, 50,"%#04x : 0x13 funct3 invalid",pc);
 					break;
 			}
 			break;
 		case 0x33 :
-			switch(instruction.funct3){
+			switch(instruction.funct7 &0x1){
 				case 0x0 :
-					switch(instruction.funct7){
-						case 0x0 : // ADD
-							snprintf(output_str, 50,"%#04x : ADD %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
+					switch(instruction.funct3){
+					case 0x0 :
+						switch(instruction.funct7){
+							case 0x0 : // ADD
+								snprintf(output_str, 50,"%#04x : ADD x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+								break;
+							case 0x20 : // SUB
+								snprintf(output_str, 50,"%#04x : SUB x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+								break;
+							default :
+								snprintf(output_str, 50,"%#04x : 0x33 funct7 invalid", pc);
+								break;
+							}
 							break;
-						case 0x20 : // SUB
-							snprintf(output_str, 50,"%#04x : SUB %#06x, %#06x, %#06x",pc, instruction.rd, instruction.rs1, instruction.rs2);
+					case 0x1 : // SHift left
+						snprintf(output_str, 50,"%#04x : SLL x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+						break;
+					case 0x2 : // Set <
+						snprintf(output_str, 50,"%#04x : SLT x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+						break;
+					case 0x3 : // Set < Unsigned
+						snprintf(output_str, 50,"%#04x : SLTU x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+						break;
+					case 0x4 : // XOR
+						snprintf(output_str, 50,"%#04x : XOR x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+						break;
+					case 0x5 : // Shift right and Right Arithm
+						switch(instruction.funct7){
+							case 0x0 :
+								snprintf(output_str, 50,"%#04x : SRL x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
 							break;
-						default :
-							snprintf(output_str, 50,"%#04x : Funct not implemented", pc);
-							break;
+							case 0x20 :
+								snprintf(output_str, 50,"%#04x : SRA x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+								break;
+							default :
+								snprintf(output_str, 50,"%#04x : 0x33 funct7 invalid", pc);
+								break;
 						}
 						break;
-				case 0x1 : // SHift left
-					snprintf(output_str, 50,"%#04x : SLL %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
-					break;
-				case 0x2 : // Set <
-					snprintf(output_str, 50,"%#04x : SLT %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
-					break;
-				case 0x3 : // Set < Unsigned
-					snprintf(output_str, 50,"%#04x : SET < UNSIGNED", pc);
-					break;
-				case 0x4 : // XOR
-					snprintf(output_str, 50,"%#04x : XOR %#06x, %#06x, %#06x",pc, instruction.rd, instruction.rs1, instruction.rs2);
-					break;
-				case 0x5 : // Shift right and Right Arithm
-					switch(instruction.funct7){
-						case 0x0 :
-							snprintf(output_str, 50,"%#04x : SRL %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
+					case 0x6 : // OR
+						snprintf(output_str, 50,"%#04x : OR x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
 						break;
-						case 0x20 :
-							snprintf(output_str, 50,"%#04x : SRA %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs2, instruction.rs1);
+					case 0x7 : // AND
+						snprintf(output_str, 50,"%#04x : AND x%d x%d x%d", pc, instruction.rd, instruction.rs1, instruction.rs2);
+					break;
+					default :
+						snprintf(output_str, 50,"%#04x : 0x33 funct3 invalid", pc);
+						break;
+				}
+				break;
+
+				case 0x1 :
+					switch(instruction.funct3){
+						case 0 : // MUL
+							snprintf(output_str, 50,"%#04x : MUL x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 1 : // MULH
+							snprintf(output_str, 50,"%#04x : MULH x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 2 : // MULHSU
+							snprintf(output_str, 50,"%#04x : MULHSU x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 3 : // MULHU
+							snprintf(output_str, 50,"%#04x : MULHU x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 4 : // DIV
+							snprintf(output_str, 50,"%#04x : DIV x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 5 : // DIVU
+							snprintf(output_str, 50,"%#04x : DIVU x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 6 : // REM
+							snprintf(output_str, 50,"%#04x : REM x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
+							break;
+						case 7 : // REMU
+							snprintf(output_str, 50,"%#04x : REMU x%d x%d x%d",pc, instruction.rd, instruction.rs1, instruction.rs2);
 							break;
 						default :
-							snprintf(output_str, 50,"%#04x : Funct3 not valid", pc);
+							snprintf(output_str, 50,"%#04x : Invalid MUL/DIV instruction",pc);
 							break;
 					}
-					break;
-				case 0x6 : // OR
-					snprintf(output_str, 50,"%#04x : OR %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
-					break;
-				case 0x7 : // AND
-					snprintf(output_str, 50,"%#04x : AND %#06x, %#06x, %#06x", pc, instruction.rd, instruction.rs1, instruction.rs2);
-				break;
-				default :
-					snprintf(output_str, 50,"%#04x : Funct3 not implemented", pc);
 					break;
 			}
 			break;
 		case 0x63 : // Branch
 			switch(instruction.funct3){
 				case 0x0 : // Branch if Equal
-					snprintf(output_str, 50,"%#04x : BEQ %d = %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BEQ x%d x%d %d",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				case 0x1 : // Branch if not equal
-					snprintf(output_str, 50,"%#04x : BNE %d != %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BNE x%d x%d %d",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				case 0x4 : // Branch less than
-					snprintf(output_str, 50,"%#04x : BLT %d < %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BLT x%d x%d %d",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				case 0x5 : // Branch greater equal than
-					snprintf(output_str, 50,"%#04x : BGE %d >= %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BGE x%d x%d %d",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				case 0x6 : // Branch less than unsigned
-					snprintf(output_str, 50,"%#04x : BLTU %d < %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BLTU x%d x%d %u",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				case 0x7 : // Branch greater than unsigned					
-					snprintf(output_str, 50,"%#04x : BGEU %d >= %d",pc,instruction.rs1, instruction.rs2);
+					snprintf(output_str, 50,"%#04x : BGEU x%d x%d %u",pc, instruction.rs1, instruction.rs2, instruction.Bimm);
 					break;
 				default :
 					snprintf(output_str, 50,"%#04x : Invalid branch instruction", pc);
@@ -443,10 +551,10 @@ char* VerboseInstruction(struct instr instruction, int pc){
 			}
 			break;
 		case 0x6F : // Jump and Link
-			snprintf(output_str, 50,"%#04x : JAL %#02x, %#010x", pc, instruction.rd, instruction.Jimm);
+			snprintf(output_str, 50,"%#04x : JAL x%d %d", pc, instruction.rd, instruction.Jimm);
 			break;
-		case 0x67 :
-			snprintf(output_str, 50,"%#04x : JALR %#02x, %#02x, %#010x", pc, instruction.rd, instruction.rs1, instruction.Jimm);
+		case 0x67 : // Jump and link return
+			snprintf(output_str, 50,"%#04x : JALR x%d x%d %d", pc, instruction.rd, instruction.rs1, instruction.Jimm);
 			break;
 		case 0x73 : //ECALL / EBREAK
 			switch(instruction.Iimm){
@@ -457,18 +565,19 @@ char* VerboseInstruction(struct instr instruction, int pc){
 					snprintf(output_str, 50,"%#04x : EBREAK", pc);
 					break;
 				default :
-					snprintf(output_str, 50,"%#04x : Error ECALL",pc);
+					snprintf(output_str, 50,"%#04x : Invalid ECALL",pc);
 					break;
 			}
 			break;
 		case 0x37 :
-			snprintf(output_str, 50,"%#04x : LUI %#06x, %#010x",pc, instruction.rd, instruction.Uimm);
+			snprintf(output_str, 50,"%#04x : LUI x%d %d",pc, instruction.rd, instruction.Uimm);
 			break;
 		case 0x17 :
-			snprintf(output_str,  50,"%#04x : AUIPC %#010x, %#010x",pc, instruction.Uimm, pc);
+			snprintf(output_str,  50,"%#04x : AUIPC x%d %d",pc, instruction.rd, instruction.Uimm);
 			break;
+
 		default : // Unknown
-			snprintf(output_str, 50,"%#04x : Opcode not implemented!",pc);
+			snprintf(output_str, 50,"%#04x : Opcode not implemented",pc);
 			break;
 	}
 	return output_str;
