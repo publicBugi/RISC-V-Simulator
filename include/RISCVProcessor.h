@@ -33,7 +33,7 @@ struct ctrlSignals{ // These are not actual control signals as described in RISC
 struct instr InstructionDecode(int MachineInstr);
 
 // A single processor step; This is the core of the entire processor.
-struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instruction, int *pc);
+struct ctrlSignals SingleCycleStep(int reg[], unsigned char *mem, struct instr instruction, int *pc);
 
 // Dummy processor; Returns a char array in the style of "0x4 : ADDI x0, x0, x0"
 char *VerboseInstruction(struct instr instruction, int pc);

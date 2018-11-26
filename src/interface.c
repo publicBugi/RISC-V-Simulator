@@ -7,7 +7,7 @@ void wprintRegisters(int *reg, WINDOW *Window){
 	}
 }
 
-void wprintMemory(char *mem , WINDOW *W_Memory, int User_memPoint){
+void wprintMemory(unsigned char *mem , WINDOW *W_Memory, int User_memPoint){
 	mvwprintw(W_Memory, 1, 2, "  Address");
 	mvwprintw(W_Memory, 1, 17, "+0");
 	mvwprintw(W_Memory, 1, 24, "+1");
@@ -15,18 +15,18 @@ void wprintMemory(char *mem , WINDOW *W_Memory, int User_memPoint){
 	mvwprintw(W_Memory, 1, 38, "+3");
 	for (int i = 0; i < 39; i++){
 		if((User_memPoint - (i*4) < 0)){
-			mvwprintw(W_Memory, i+2 , 2 ,"-----------:");
-			mvwprintw(W_Memory, i+2 , 16 ,"----");
-			mvwprintw(W_Memory, i+2 , 23 ,"----");
-			mvwprintw(W_Memory, i+2 , 30 ,"----");
-			mvwprintw(W_Memory, i+2 , 37 ,"----");
+			mvwprintw(W_Memory, i+2 , 3 ,"-----------:");
+			mvwprintw(W_Memory, i+2 , 17 ,"----");
+			mvwprintw(W_Memory, i+2 , 24 ,"----");
+			mvwprintw(W_Memory, i+2 , 31 ,"----");
+			mvwprintw(W_Memory, i+2 , 38 ,"----");
 		}
 		else{
-			mvwprintw(W_Memory, i+2 , 2 ,"%#010x :", (User_memPoint-(i*4)));
-			mvwprintw(W_Memory, i+2 , 16 ,"%#04x", mem[User_memPoint-(i*4)+0]);
-			mvwprintw(W_Memory, i+2 , 23 ,"%#04x", mem[User_memPoint-(i*4)+1]);
-			mvwprintw(W_Memory, i+2 , 30 ,"%#04x", mem[User_memPoint-(i*4)+2]);
-			mvwprintw(W_Memory, i+2 , 37 ,"%#04x", mem[User_memPoint-(i*4)+3]);
+			mvwprintw(W_Memory, i+2 , 3 ,"%010x :", (User_memPoint-(i*4)));
+			mvwprintw(W_Memory, i+2 , 17 ,"%.2x", (unsigned int)mem[User_memPoint-(i*4)+0]);
+			mvwprintw(W_Memory, i+2 , 24 ,"%.2x", (unsigned int)mem[User_memPoint-(i*4)+1]);
+			mvwprintw(W_Memory, i+2 , 31 ,"%.2x", (unsigned int)mem[User_memPoint-(i*4)+2]);
+			mvwprintw(W_Memory, i+2 , 38 ,"%.2x", (unsigned int)mem[User_memPoint-(i*4)+3]);
 		}
 	}
 }

@@ -39,7 +39,7 @@ struct instr InstructionDecode(int MachineInstr){
 
 }
 
-struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instruction, int *pc){
+struct ctrlSignals SingleCycleStep(int reg[], unsigned char *mem, struct instr instruction, int *pc){
 	struct ctrlSignals Control;
 	Control.Branch = 0;
 	Control.ECALL = 0;
@@ -87,9 +87,9 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 					break;
 				case 0x2 : // Store Word
 					mem[reg[instruction.rs1] + instruction.Simm] = reg[instruction.rs2] & 0x000000ff;
-					mem[reg[instruction.rs1] + instruction.Simm + 1] = (reg[instruction.rs2] & 0x0000ff00) >> 8;
-					mem[reg[instruction.rs1] + instruction.Simm + 2] = (reg[instruction.rs2] & 0x00ff0000) >> 16;
-					mem[reg[instruction.rs1] + instruction.Simm + 3] = (reg[instruction.rs2] & 0xff000000) >> 24;
+					mem[reg[instruction.rs1] + instruction.Simm + 1] = (reg[instruction.rs2] >> 8) & 0x000000ff;
+					mem[reg[instruction.rs1] + instruction.Simm + 2] = (reg[instruction.rs2] >> 16) & 0x000000ff;
+					mem[reg[instruction.rs1] + instruction.Simm + 3] = (reg[instruction.rs2] >> 24) & 0x000000ff;
 					break;
 				default :
 					break;
@@ -127,15 +127,15 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 					reg[instruction.rd] = reg[instruction.rs1] & instruction.Iimm;
 					break;
 				case 0x1 : // Shift left Immediate
-					reg[instruction.rd] = reg[instruction.rs1] << instruction.rs2;
+					reg[instruction.rd] = reg[instruction.rs1] << instruction.Iimm;
 					break;
 				case 0x5 : // Shift right immediate & Aritm
 					switch(instruction.funct7){
 						case 0x0 :
-							reg[instruction.rd] = reg[instruction.rs1] >> instruction.rs2;
+							reg[instruction.rd] = (unsigned)reg[instruction.rs1] >> instruction.Iimm;
 							break;
 						case 0x20 :
-							reg[instruction.rd] = reg[instruction.rs1] >> instruction.rs2;
+							reg[instruction.rd] = reg[instruction.rs1] >> instruction.Iimm;
 							break;
 						default :
 							break;
@@ -190,7 +190,7 @@ struct ctrlSignals SingleCycleStep(int reg[], char *mem, struct instr instructio
 								reg[instruction.rd] = (unsigned)reg[instruction.rs1] >> reg[instruction.rs2];
 							break;
 							case 0x20 :
-								reg[instruction.rd] = reg[instruction.rs1] >> reg[instruction.rs2]; //WRONG
+									reg[instruction.rd] = reg[instruction.rs1] >> reg[instruction.rs2]; //WRONG
 								break;
 							default :
 								break;

@@ -37,6 +37,15 @@ If I have time I'd like to implement the important extensions to the processor.
 NOTE: Specify Endianness (RISC-V is little Endian / Option to support viewing it in Big endian?)
 
 
+For the report: I did the final test with the T.A, and got t1 and t14 wrong. I solved them shortly after as:
+t1 : My SRLI didn't account to sign, so accidentally got sign extended. Fixed by casting it to unsigned.
+t14 : I originally didn't implement memory and store my program into a seperate array. .Data files were not included in memory, quickly fixed by storing my program into memory with a for loop.
+
+Before I hand in I'll make it run entirely off program memory.
+
+
+
+
 
 ```C
 int *progr;

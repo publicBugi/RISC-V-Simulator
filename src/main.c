@@ -69,7 +69,13 @@ int main(int argc, char** argv) {
 	int reg[32] = {0};								// Allocate registers (Zero initialized)
 	reg[2] = 0x7ffffff0; 							// Stack pointer
 	reg[3] = 0x10000000; 							// Data pointer
-	char *mem = malloc(reg[2]);						// Allocate CPU memory on heap
+	unsigned char *mem = malloc(reg[2]);			// Allocate CPU memory on heap
+	for (int i = 0; i < pc_max; i++){
+		mem[(i*4)] = progr[i] & 0xff;
+		mem[(i*4)+1] = (progr[i] >> 8)& 0xff;
+		mem[(i*4)+2] = (progr[i] >> 16)& 0xff;
+		mem[(i*4)+3] = (progr[i] >> 24)& 0xff;
+	}
 	struct instr instruction;						// Decoded Instruction struct (Declared in RISCVProcessor.h)
 	struct ctrlSignals Control = {	Halt:0, 		// Processor control signals (Declared in RISCVProcessor.h)
 									Branch:0, 
@@ -102,6 +108,10 @@ int main(int argc, char** argv) {
 		keypad(stdscr, TRUE);	// Enable additional inputs
 		clear();				// Clear terminal
 
+		if (has_colors()){
+			//start_color();
+		}
+
 		// ALLOCATE WINDOWS
 		WINDOW *W_MachineCode = newwin(LINES * 0.8,COLS * 0.4,0,0);
 		WINDOW *W_AssemblyCode = newwin(LINES * 0.8, COLS * 0.4,0,COLS*0.4);
@@ -119,6 +129,8 @@ int main(int argc, char** argv) {
 
 		// Allocate user position in memory (Default stack pointer)
 		int User_MemPoint = reg[2];
+		int User_PC = pc;
+		int focus = 0;
 
 		// Generate Assembly code from Machine code
 		char **AssemblyCode; // Allocate Array of Char Arrays
@@ -137,13 +149,12 @@ int main(int argc, char** argv) {
 		// Allocate char array for Console. (Should redo this; Not good code)
 		int CH_Size = 1;					// Current Console Size
 		int CH_Point = 0;					// Position in Console
-		int CH_USPoint = 0;					// User defined position
 		char **ConsoleHistory = malloc(CH_Size); // Allocate first entry
 		for (int i = 0; i < CH_Size; i++){		 // Allocate char array for first entry
 			*(ConsoleHistory+CH_Point) = malloc(5); // Won't function without this (Fix this!)
 			//snprintf(*ConsoleHistory, 5, "Test");
 		}
-		char user_Input = 0;
+		int user_Input = 0;
 
 		while(user_Input != 's'){
 			user_Input = 0;
@@ -179,10 +190,8 @@ int main(int argc, char** argv) {
 			Control = SingleCycleStep(reg, mem, instruction, &pc);
 			
 			// Ensure x0 is hardwired zero (Better ways to do this?)
-			if (reg[0] != 0){
-				reg[0] = 0;
-			}
-
+			reg[0] = 0;
+			
 			// Handle Enviroment Calls.
 			if (Control.ECALL){
 				switch(reg[0xa]){
@@ -235,16 +244,13 @@ int main(int argc, char** argv) {
 				pc += 4;
 			}
 			
-			// Auto focus memory to Stack pointer (Expand to allow user to control this)
-			User_MemPoint = reg[2] + 80;
-			
 			while(user_Input != 's'){
 				
 				// Write registers to windows
 				wprintRegisters(reg, W_Registers);
 				wprintMemory(mem, W_Memory, User_MemPoint);
-				wprintMachine(progr, W_MachineCode, pc/4, pc_max/4);
-				wprintAssembly(AssemblyCode, W_AssemblyCode, pc/4, pc_max/4);
+				wprintMachine(progr, W_MachineCode, (pc - User_PC)/4, pc_max/4);
+				wprintAssembly(AssemblyCode, W_AssemblyCode, (pc - User_PC)/4, pc_max/4);
 				//wprintConsole(ConsoleHistory, W_Console, pc/4);
 				for (int i = 0; i < CH_Size; i++){
 					mvwprintw(W_Console, 1 + i, 1, *ConsoleHistory);
@@ -261,6 +267,55 @@ int main(int argc, char** argv) {
 				user_Input = 0;
 				user_Input = getch();
 
+				switch(user_Input){
+					case KEY_LEFT :
+						if (focus != 1){
+							focus++;
+						}
+						break;
+
+					case KEY_RIGHT :
+						if (focus != 0){
+							focus--;
+						}
+						break;
+					case KEY_UP :
+						switch(focus){
+							case 0 :
+								User_MemPoint += 4;
+								break;
+							case 1 :
+								User_PC += 4;
+								break;
+							default :
+								focus = 0;
+								break;
+						}
+						break;
+					case KEY_DOWN :
+						switch(focus){
+							case 0 :
+								User_MemPoint -= 4;
+								break;
+							case 1 :
+								User_PC -= 4;
+								break;
+							default :
+								focus = 0;
+								break;
+						}
+						break;
+					case '.' :
+						User_MemPoint = reg[2] + 80;
+						break;
+					case ',' :
+						User_PC = 0;
+						break;
+					case 's' :
+						User_PC = 0;
+						break;
+				}
+
 			}
 
 			
@@ -273,7 +328,9 @@ int main(int argc, char** argv) {
 		// CURSES Debugger exit
 	}
 	else { 	// EXECUTE COMMAND LINE
+		int cycle_Count = 0;
 		while(pc < pc_max && !(pc < 0) && !(Control.Halt)){
+			cycle_Count++;
 			// Processor loop will exit if:
 				// PC counter exceeds PC_MAX (Program size)
 				// PC goes below zero (Indicates branch / JUMP error!)
@@ -332,6 +389,7 @@ int main(int argc, char** argv) {
 				pc += 4;
 			}
 		}
+		printf("Cycles run: %d\n", cycle_Count);
 	
 	}
 	// PROCESSOR DONE - Additional functions

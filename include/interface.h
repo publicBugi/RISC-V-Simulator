@@ -9,7 +9,7 @@
 // These functions write register values to their corrosponding windows.
 void wprintRegisters(int *reg, WINDOW *Window);
 
-void wprintMemory(char *mem , WINDOW *W_Memory, int User_memPoint);
+void wprintMemory(unsigned char *mem , WINDOW *W_Memory, int User_memPoint);
 
 void wprintConsole(char** console, WINDOW *W_Console, int pc);
 
