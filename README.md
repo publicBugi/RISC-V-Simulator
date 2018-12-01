@@ -12,7 +12,7 @@ COMPLETE TASK 2									: Complete
 COMPLETE TASK 3									: Complete
 COMPLETE INSTRUCTION TESTS						: Complete
 
-PRIORITY: Curses based Debugger					: Priority
+PRIORITY: Curses based Debugger					: Partially Complete
 	WINDOW1: Machine code 						: Complete
 	WINDOW2: Assembly code 						: Complete (Minor bugs)
 	WINDOW3: Console (ECALL Functions) 			: EXIT Implemented
@@ -20,9 +20,9 @@ PRIORITY: Curses based Debugger					: Priority
 	WINDOW5: Memory 							: Complete
 	Function1: Step by step view				: Complete (One way)
 	Function2: Select Machine/Assembly line 
-			   and autostep to breakpoint 		: Pending
-	Function3: More navigation features (QOL)	: Pending
-Add MUL, DIV and RISC-V Extension functions. 	: Pending
+			   and autostep to breakpoint 		: Partially
+	Function3: More navigation features (QOL)	: Partially
+Add MUL, DIV and RISC-V Extension functions. 	: M Extension implemented
 Add more ECALL Functions(?)						: Not priority
 Tidy code / Helper functions 				   	: Partially
 
@@ -43,8 +43,15 @@ t14 : I originally didn't implement memory and store my program into a seperate 
 
 Before I hand in I'll make it run entirely off program memory.
 
-
-
+Frontpage
+Abstract
+Introduction
+The Processor
+The NCurses Debugger
+Testing
+Conclusion
+Bilag: Source code
+Bilag: Results from tests/task1 , 2 , 3 and Final tests 1-14.
 
 
 ```C
