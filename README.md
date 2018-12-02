@@ -4,11 +4,11 @@ As part of Course 01255 "Computer Architecture And Engineering" at the Technical
 ## Getting Started
 To get started with the simulator on your local machine, simply pull a copy of the repository and compile the project using the provided makefile.
 
-'./RISCVSIM {Path to File}'
+`./RISCVSIM {Path to File}`
 
-'./RISCVSIM {Path to File} -d'
+`./RISCVSIM {Path to File} -d`
 
-'./RISCVSIM {Path to File} -v -t {Path to resultfile} -o {Path to output file}'
+`./RISCVSIM {Path to File} -v -t {Path to resultfile} -o {Path to output file}`
 
 **-d** 
 ncurses Visual Debugger enabled
@@ -20,9 +20,9 @@ Store result at the given filepath.
 Verbose enabled: Print out each instruction.
 
 **Examples**
-'./RISCVSIM tests/task3/loop.bin'
-'./RISCVSIM tests/task3/loop.bin -v -t tests/task3/loop.res -o tests/task3/result_task3/loop.res'
-'./RISCVSIM tests/task3/loop.bin -d'
+`./RISCVSIM tests/task3/loop.bin`
+`./RISCVSIM tests/task3/loop.bin -v -t tests/task3/loop.res -o tests/task3/result_task3/loop.res`
+`./RISCVSIM tests/task3/loop.bin -d`
 
 ### Prerequisites
 The simulator uses the ncurses library for the visual debugger.  The ncurses library is default most linux/unix systems, although I have not been able to test it on any other platform.
