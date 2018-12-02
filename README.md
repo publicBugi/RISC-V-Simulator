@@ -1,3 +1,44 @@
+# RISC-V32IM Simulator
+As part of Course 01255 "Computer Architecture And Engineering" at the Technical University of Denmark the final project consists of building a RISC-V simulator. This simulator consists of a commandline interface and a visual debugger built with the ncurses library, currently capable of running RISC-V compiled software supporting the base integer set and the multiplication and divison extension.
+
+## Getting Started
+To get started with the simulator on your local machine, simply pull a copy of the repository and compile the project using the provided makefile.
+
+### Prerequisites
+The simulator uses the ncurses library for the visual debugger.  The ncurses library is default most linux/unix systems, although I have not been able to test it on any other platform.
+
+## Current Issues
+
+### Redundancy in code
+There is a lot of redundancy in the code as features were layered on top of each other. I would like to give it another pass making the code easier to read and maintain.
+
+### Unsigned Division
+Unable to pass instruction test: unsigned division. I am certain this is an error in the result file, as the manual explicitly states the return value of x/0 is to be 2^XLEN - 1.
+
+### Odd Char array behaviour
+In the visual debugger, the translation of machine code to assembly results in the first elements in the char arrays to contain noise after the first iteration. Emphasis on the first iteration, as it is written correctly but the moment the loop is done translating machine code the first few elements turn to noise.
+
+For small programs the first element is noise, for larger elements several elements are noise.
+```C
+int *progr;
+	long pc_max = loadArray(&progr, argv[1]);
+	char **AssemblyCode = malloc(pc_max);
+	for (int i = 0; i < (pc_max); i++){
+		AssemblyCode[i] = malloc(50);
+		VerboseInstruction(&AssemblyCode[i], InstructionDecode(*(progr + i)), i*4);	
+		printf(*(AssemblyCode+i));
+		printf("\n");
+		printf("%p\n\n", *(AssemblyCode+i)); // No issue
+	}
+	for (int i = 0; i < pc_max; i++){
+		printf(*(AssemblyCode+i));
+		printf("\n");
+		printf("%p\n\n", *(AssemblyCode+i)); // Issue!
+	}
+	free(AssemblyCode);
+	free(progr);
+```
+
 
 Plan :
 Read instructions from file 					: Complete
@@ -34,47 +75,4 @@ Autostep & Navigation SATURDAY
 Clean code and fix bugs SUNDAY (CLI and CURSES Commands have to be clean)
 If I have time I'd like to implement the important extensions to the processor.
 
-NOTE: Specify Endianness (RISC-V is little Endian / Option to support viewing it in Big endian?)
-
-
-For the report: I did the final test with the T.A, and got t1 and t14 wrong. I solved them shortly after as:
-t1 : My SRLI didn't account to sign, so accidentally got sign extended. Fixed by casting it to unsigned.
-t14 : I originally didn't implement memory and store my program into a seperate array. .Data files were not included in memory, quickly fixed by storing my program into memory with a for loop.
-
 Before I hand in I'll make it run entirely off program memory.
-
-Frontpage
-Abstract
-Introduction
-The Processor
-The NCurses Debugger
-Testing
-Conclusion
-Bilag: Source code
-Bilag: Results from tests/task1 , 2 , 3 and Final tests 1-14.
-
-
-Test - All passed
-Optional instruction test taken from AlMan (?)
-	- Division Unsigned not passed; 10 / 0 = 0x0a but I insist it's INT_MAX - 1
-	- Random10 error; Some values differ by one, and one value should be zero is ffffff.
-		- With the precense of 
-
-```C
-int *progr;
-	long pc_max = loadArray(&progr, argv[1]);
-	char **AssemblyCode = malloc(pc_max);
-	for (int i = 0; i < (pc_max); i++){
-		AssemblyCode[i] = malloc(50);
-		VerboseInstruction(&AssemblyCode[i], InstructionDecode(*(progr + i)), i*4);	
-		printf(*(AssemblyCode+i));
-		printf("\n");
-		printf("%p\n\n", *(AssemblyCode+i));
-	}
-	for (int i = 0; i < pc_max; i++){
-		printf(*(AssemblyCode+i));
-		printf("\n");
-		printf("%p\n\n", *(AssemblyCode+i));
-	}
-	free(AssemblyCode);
-	free(progr);```
