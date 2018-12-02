@@ -34,20 +34,20 @@ int main(int argc, char** argv) {
 
 	// Set options
 	for (int i = 2; i < argc; i++){
-		switch(argv[i][1]){
+		switch(argv[i][1]){	// Given '-x', is x == parameter?
 			case 'd' :			// Debugger enable
 				progFlags.Debug = 1;
 				printf("Enable ncurses based Debugger\n");
 				break;
 			case 'o' :			// Store output file at given filepath
-				i++;
-				progFlags.outputFile = i;
+				i++;			// Output path is stored in the next string
+				progFlags.outputFile = i; // Store output path value.
 				progFlags.Output = 1;
 				printf("Output file %s \n", argv[i]);
 				break;
 			case 't' :			// Test final register versus result file
-				i++;
-				progFlags.resultFile = i;
+				i++;			// Result filepath is given in next string
+				progFlags.resultFile = i;	// Store result path value
 				progFlags.Testmode = 1;
 				printf("Testmode enabled\n");
 				break;
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 				progFlags.Verbose = 1;
 				printf("Verbose enabled\n");
 				break;
-			default :			// Unknown argument : EXIT PROGRAM
+			default  :			// Unknown argument : EXIT PROGRAM
 				printf("Invalid argument %s\n", argv[i]);
 				exit(1);
 				break;
@@ -419,8 +419,13 @@ int main(int argc, char** argv) {
 	// Save to file given by output path.
 	if (progFlags.Output){
 		FILE *writeOutput = fopen(argv[progFlags.outputFile], "wb");
-		fwrite(reg, 4, 32, writeOutput);
-		fclose(writeOutput);
+		if (writeOutput != NULL){
+			fwrite(reg, 4, 32, writeOutput);
+			fclose(writeOutput);
+		}
+		else{
+			printf("Error File; Remember filename");
+		}
 
 	}
 

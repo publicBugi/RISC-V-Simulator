@@ -52,23 +52,19 @@ struct ctrlSignals SingleCycleStep(int reg[], unsigned char *mem, struct instr i
 		case 0x3 :
 			switch(instruction.funct3){
 				case 0x0 :// Load Byte
-					reg[instruction.rd] = mem[instruction.Iimm + reg[instruction.rs1]];
+					reg[instruction.rd] = ((mem[instruction.Iimm + reg[instruction.rs1]] << 24) >> 24);
 					break;
 				case 0x1 :// Load Halfword
-					reg[instruction.rd] = mem[instruction.Iimm + reg[instruction.rs1]] & 0x000000ff;
-					reg[instruction.rd] |= mem[instruction.Iimm + reg[instruction.rs1] + 1] << 8;
+					reg[instruction.rd] = ((mem[instruction.Iimm + reg[instruction.rs1]] | (mem[instruction.Iimm + reg[instruction.rs1] + 1] << 8)) << 16) >> 16;
 					break;
 				case 0x2 :// Load Word
-					reg[instruction.rd] = mem[instruction.Iimm + reg[instruction.rs1]] & 0x000000ff;
-					reg[instruction.rd] |= (mem[instruction.Iimm + reg[instruction.rs1] + 1] << 8) &0x0000ff00;
-					reg[instruction.rd] |= (mem[instruction.Iimm + reg[instruction.rs1] + 2] << 16) & 0x00ff0000;
-					reg[instruction.rd] |= mem[instruction.Iimm + reg[instruction.rs1] + 3] << 24;
+					reg[instruction.rd] = mem[instruction.Iimm + reg[instruction.rs1]] | (mem[instruction.Iimm + reg[instruction.rs1] + 1] << 8) | (mem[instruction.Iimm + reg[instruction.rs1] + 2] << 16) | (mem[instruction.Iimm + reg[instruction.rs1] + 3] << 24);
 					break;
 				case 0x4 : // Load Byte Unsigned
-					reg[instruction.rd] =mem[(instruction.Iimm + reg[instruction.rs1])] &0xff;
+					reg[instruction.rd] =mem[(instruction.Iimm + reg[instruction.rs1])] & 0xff;
 					break;
 				case 0x5 :// Load Half Unsigned
-					reg[instruction.rd] = mem[(instruction.Iimm + reg[instruction.rs1])] & 0x000000ff;
+					reg[instruction.rd] = mem[(instruction.Iimm + reg[instruction.rs1])] & 0x00ff;
 					reg[instruction.rd] |= (mem[(instruction.Iimm + reg[instruction.rs1] + 1)] << 8) & 0xff00;
 					break;
 				default :
@@ -162,7 +158,7 @@ struct ctrlSignals SingleCycleStep(int reg[], unsigned char *mem, struct instr i
 								break;
 							}
 							break;
-					case 0x1 : // SHift left
+					case 0x1 : // Shift left
 						reg[instruction.rd] = reg[instruction.rs1] << reg[instruction.rs2];
 						break;
 					case 0x2 : // Set <

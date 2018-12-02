@@ -54,6 +54,12 @@ Bilag: Source code
 Bilag: Results from tests/task1 , 2 , 3 and Final tests 1-14.
 
 
+Test - All passed
+Optional instruction test taken from AlMan (?)
+	- Division Unsigned not passed; 10 / 0 = 0x0a but I insist it's INT_MAX - 1
+	- Random10 error; Some values differ by one, and one value should be zero is ffffff.
+		- With the precense of 
+
 ```C
 int *progr;
 	long pc_max = loadArray(&progr, argv[1]);

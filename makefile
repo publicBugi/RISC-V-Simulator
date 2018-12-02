@@ -11,7 +11,7 @@ CFLAGS += -Wall
 LDFLAGS += -Llib 
 LDLIBS += -lm -lncurses
 
-.PHONY: all clean run
+.PHONY: all clean
 
 all: $(EXE)
 
@@ -23,6 +23,3 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	$(RM) $(OBJ)
-
-run: $(EXE)
-	./$(EXE)
