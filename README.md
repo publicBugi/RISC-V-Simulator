@@ -20,6 +20,7 @@ Store result at the given filepath.
 Verbose enabled: Print out each instruction.
 
 **Examples**
+
 `./RISCVSIM tests/task3/loop.bin`
 
 `./RISCVSIM tests/task3/loop.bin -v -t tests/task3/loop.res -o tests/task3/result_task3/loop.res`
