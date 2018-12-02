@@ -4,6 +4,26 @@ As part of Course 01255 "Computer Architecture And Engineering" at the Technical
 ## Getting Started
 To get started with the simulator on your local machine, simply pull a copy of the repository and compile the project using the provided makefile.
 
+'./RISCVSIM {Path to File}'
+
+'./RISCVSIM {Path to File} -d'
+
+'./RISCVSIM {Path to File} -v -t {Path to resultfile} -o {Path to output file}'
+
+**-d** 
+ncurses Visual Debugger enabled
+**-t {Path to file}** 
+Test result against result, given by filepath
+**-o {Path to output file}**
+Store result at the given filepath.
+**-v**
+Verbose enabled: Print out each instruction.
+
+**Examples**
+'./RISCVSIM tests/task3/loop.bin'
+'./RISCVSIM tests/task3/loop.bin -v -t tests/task3/loop.res -o tests/task3/result_task3/loop.res'
+'./RISCVSIM tests/task3/loop.bin -d'
+
 ### Prerequisites
 The simulator uses the ncurses library for the visual debugger.  The ncurses library is default most linux/unix systems, although I have not been able to test it on any other platform.
 
@@ -13,7 +33,7 @@ The simulator uses the ncurses library for the visual debugger.  The ncurses lib
 There is a lot of redundancy in the code as features were layered on top of each other. I would like to give it another pass making the code easier to read and maintain.
 
 ### Unsigned Division
-Unable to pass instruction test: unsigned division. I am certain this is an error in the result file, as the manual explicitly states the return value of x/0 is to be 2^XLEN - 1.
+Unable to pass instruction test: unsigned division. I am certain this is an error in the result file, as the manual explicitly states the return value of x/0 is to be $2^XLEN - 1$.
 
 ### Odd Char array behaviour
 In the visual debugger, the translation of machine code to assembly results in the first elements in the char arrays to contain noise after the first iteration. Emphasis on the first iteration, as it is written correctly but the moment the loop is done translating machine code the first few elements turn to noise.
@@ -39,7 +59,7 @@ int *progr;
 	free(progr);
 ```
 
-
+# Plan (Old)
 Plan :
 Read instructions from file 					: Complete
 Read results from file							: Complete
