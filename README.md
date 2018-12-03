@@ -1,6 +1,9 @@
 # RISC-V32IM Simulator
 As part of Course 01255 "Computer Architecture And Engineering" at the Technical University of Denmark the final project consists of building a RISC-V simulator. This simulator consists of a commandline interface and a visual debugger built with the ncurses library, currently capable of running RISC-V compiled software supporting the base integer set and the multiplication and divison extension.
 
+## Prerequisites
+The simulator uses the ncurses library for the visual debugger.  The ncurses library is default most linux/unix systems, although I have not been able to test it on any other platform.
+
 ## Getting Started
 To get started with the simulator on your local machine, simply pull a copy of the repository and compile the project using the provided makefile.
 
@@ -27,8 +30,32 @@ Verbose enabled: Print out each instruction.
 
 `./RISCVSIM tests/task3/loop.bin -d`
 
-### Prerequisites
-The simulator uses the ncurses library for the visual debugger.  The ncurses library is default most linux/unix systems, although I have not been able to test it on any other platform.
+### Visual Debugger
+Navigation in the visual debugger is a bit tricky at the moment: There is currently a lack of any indiciation where the user is pointing.
+
+The debugger consists of two active windows, and several passive windows that update with each step.
+
+A step can be taken with key **S**. There is currently no way to step backwards into the program.
+
+In the active window (Default Memory), the **UP_ARROW** and **DOWN_ARROW** go up and down.
+
+To change the active window use the **LEFT_ARROW** and **RIGHT_ARROW**.
+
+If you are uncertain where you are in the current code and memory locations:\
+**.**: Focus Memory to stackpointer address.\
+**,**: Focus Machine/Assembly to current PC.
+
+### Controls
+**S**: Step one instruction through the program.
+
+**LEFT_ARROW**: Switch to Assembly Window\
+**RIGHT_ARROW**: Switch to Memory Window
+
+**UP_ARROW**: Go up in the active window\
+**DOWN_ARROW**: Go down in the active window
+
+**.**: Focus Memory to stackpointer address.\
+**,**: Focus Machine/Assembly to current PC.
 
 ## Current Issues
 
@@ -64,38 +91,38 @@ int *progr;
 
 # Plan (Old)
 Plan :
-Read instructions from file 					: Complete
-Read results from file							: Complete
-Processor Switch statement  					: Complete
-	Processor functions							: Complete
+Read instructions from file 					: Complete\
+Read results from file							: Complete\
+Processor Switch statement  					: Complete\
+	Processor functions							: Complete\
 
-User interface (Select test)					: Scrapped (Command based)
-Automatic compare of .res and test result 		: Complete
-COMPLETE TASK 1									: Complete
-COMPLETE TASK 2									: Complete
-COMPLETE TASK 3									: Complete
-COMPLETE INSTRUCTION TESTS						: Complete
+User interface (Select test)					: Scrapped (Command based)\
+Automatic compare of .res and test result 		: Complete\
+COMPLETE TASK 1									: Complete\
+COMPLETE TASK 2									: Complete\
+COMPLETE TASK 3									: Complete\
+COMPLETE INSTRUCTION TESTS						: Complete\
 
-PRIORITY: Curses based Debugger					: Partially Complete
-	WINDOW1: Machine code 						: Complete
-	WINDOW2: Assembly code 						: Complete (Minor bugs)
-	WINDOW3: Console (ECALL Functions) 			: EXIT Implemented
-	WINDOW4: Registers 							: Complete
-	WINDOW5: Memory 							: Complete
-	Function1: Step by step view				: Complete (One way)
+PRIORITY: Curses based Debugger					: Partially Complete\
+	WINDOW1: Machine code 						: Complete\
+	WINDOW2: Assembly code 						: Complete (Minor bugs)\
+	WINDOW3: Console (ECALL Functions) 			: EXIT Implemented\
+	WINDOW4: Registers 							: Complete\
+	WINDOW5: Memory 							: Complete\
+	Function1: Step by step view				: Complete (One way)\
 	Function2: Select Machine/Assembly line 
-			   and autostep to breakpoint 		: Partially
-	Function3: More navigation features (QOL)	: Partially
-Add MUL, DIV and RISC-V Extension functions. 	: M Extension implemented
-Add more ECALL Functions(?)						: Not priority
-Tidy code / Helper functions 				   	: Partially
+			   and autostep to breakpoint 		: Partially\
+	Function3: More navigation features (QOL)	: Partially\
+Add MUL, DIV and RISC-V Extension functions. 	: M Extension implemented\
+Add more ECALL Functions(?)						: Not priority\
+Tidy code / Helper functions 				   	: Partially\
 
 
-PRIORITY: SAVE RESULT TO BINARY					: COMPLETE
+PRIORITY: SAVE RESULT TO BINARY					: COMPLETE\
 
-Save file THURSDAY. DONE
-Autostep & Navigation SATURDAY
-Clean code and fix bugs SUNDAY (CLI and CURSES Commands have to be clean)
-If I have time I'd like to implement the important extensions to the processor.
+Save file THURSDAY. DONE\
+Autostep & Navigation SATURDAY\
+Clean code and fix bugs SUNDAY (CLI and CURSES Commands have to be clean)\
+If I have time I'd like to implement the important extensions to the processor.\
 
 Before I hand in I'll make it run entirely off program memory.

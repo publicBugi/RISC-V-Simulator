@@ -16,10 +16,10 @@ void wprintMemory(unsigned char *mem , WINDOW *W_Memory, int User_memPoint){
 	for (int i = 0; i < 39; i++){
 		if((User_memPoint - (i*4) < 0)){
 			mvwprintw(W_Memory, i+2 , 3 ,"-----------:");
-			mvwprintw(W_Memory, i+2 , 17 ,"----");
-			mvwprintw(W_Memory, i+2 , 24 ,"----");
-			mvwprintw(W_Memory, i+2 , 31 ,"----");
-			mvwprintw(W_Memory, i+2 , 38 ,"----");
+			mvwprintw(W_Memory, i+2 , 17 ,"--");
+			mvwprintw(W_Memory, i+2 , 24 ,"--");
+			mvwprintw(W_Memory, i+2 , 31 ,"--");
+			mvwprintw(W_Memory, i+2 , 38 ,"--");
 		}
 		else{
 			mvwprintw(W_Memory, i+2 , 3 ,"%010x :", (User_memPoint-(i*4)));
