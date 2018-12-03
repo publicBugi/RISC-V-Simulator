@@ -124,5 +124,3 @@ Save file THURSDAY. DONE\
 Autostep & Navigation SATURDAY\
 Clean code and fix bugs SUNDAY (CLI and CURSES Commands have to be clean)\
 If I have time I'd like to implement the important extensions to the processor.\
-
-Before I hand in I'll make it run entirely off program memory.
